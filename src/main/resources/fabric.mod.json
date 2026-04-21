@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "amass",
+  "version": "${version}",
+  "name": "Amass",
+  "description": "A somewhat fun way of storing effects in combat.",
+  "authors": [
+    "Chemthunder"
+  ],
+  "contact": {
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/amass/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.chemthunder.amass.impl.Amass"
+    ],
+    "fabric-datagen": [
+      "net.chemthunder.amass.data.AmassDataGen"
+    ]
+  },
+  "mixins": [
+    "amass.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.11",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
