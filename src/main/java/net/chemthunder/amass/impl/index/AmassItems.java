@@ -1,7 +1,6 @@
 package net.chemthunder.amass.impl.index;
 
 import net.acoyt.acornlib.api.registrants.ItemRegistrant;
-import net.acoyt.acornlib.api.util.ItemUtils;
 import net.chemthunder.amass.impl.Amass;
 import net.chemthunder.amass.impl.item.GlimmeringBandItem;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;

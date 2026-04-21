@@ -1,0 +1,11 @@
+{
+  "values": [
+    "minecraft:wither",
+    "minecraft:health_boost",
+    "minecraft:instant_damage",
+    "minecraft:instant_health",
+    "minecraft:raid_omen",
+    "minecraft:trial_omen",
+    "minecraft:bad_omen"
+  ]
+}

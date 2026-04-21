@@ -47,12 +47,12 @@ public class GlimmeringBandItem extends Item implements ModelVaryingItem, Colora
                         }
                     });
 
-                    stack.set(AmassDataComponents.STORED_EFFECTS, toApply);
-
                     if (world.isClient) {
                         user.swingHand(hand);
                         user.playSoundToPlayer(SoundEvents.BLOCK_AMETHYST_BLOCK_BREAK, SoundCategory.PLAYERS, 1, 1);
                     }
+
+                    stack.set(AmassDataComponents.STORED_EFFECTS, toApply);
                 }
             }
         }
