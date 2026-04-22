@@ -13,5 +13,8 @@ public class AmassLangGen extends FabricLanguageProvider {
 
     public void generateTranslations(RegistryWrapper.WrapperLookup wrapperLookup, TranslationBuilder translationBuilder) {
         translationBuilder.add("item.amass.glimmering_band", "Glimmering Band");
+
+        translationBuilder.add("enchantment.amass.accretion", "Accretion");
+        translationBuilder.add("enchantment.amass.accretion.desc", "Allows for the Glimmering Band to be thrown, creating a cloud of the stored effects.");
     }
 }

@@ -17,6 +17,9 @@
     "main": [
       "net.chemthunder.amass.impl.Amass"
     ],
+    "client": [
+      "net.chemthunder.amass.impl.AmassClient"
+    ],
     "fabric-datagen": [
       "net.chemthunder.amass.data.AmassDataGen"
     ]

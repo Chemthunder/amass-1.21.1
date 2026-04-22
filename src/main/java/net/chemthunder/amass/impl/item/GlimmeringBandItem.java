@@ -3,9 +3,13 @@ package net.chemthunder.amass.impl.item;
 import com.nitron.nitrogen.util.interfaces.ColorableItem;
 import net.acoyt.acornlib.api.item.ModelVaryingItem;
 import net.chemthunder.amass.impl.Amass;
+import net.chemthunder.amass.impl.entity.ThrownBandEntity;
 import net.chemthunder.amass.impl.index.AmassDataComponents;
+import net.chemthunder.amass.impl.index.AmassEnchantEffects;
+import net.chemthunder.amass.impl.index.AmassEntities;
 import net.chemthunder.amass.impl.index.tag.AmassStatusEffectTags;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,10 +19,7 @@ import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,6 +37,7 @@ public class GlimmeringBandItem extends Item implements ModelVaryingItem, Colora
 
         List<StatusEffectInstance> core = stack.getOrDefault(AmassDataComponents.STORED_EFFECTS, List.of());
         List<StatusEffectInstance> toApply = new ArrayList<>(core);
+
 
         if (toApply.isEmpty()) {
             if (user.isSneaking()) {
@@ -55,8 +57,48 @@ public class GlimmeringBandItem extends Item implements ModelVaryingItem, Colora
                     stack.set(AmassDataComponents.STORED_EFFECTS, toApply);
                 }
             }
+        } else {
+            user.setCurrentHand(hand);
         }
         return super.use(world, user, hand);
+    }
+
+    public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+        boolean hasAccretion = EnchantmentHelper.hasAnyEnchantmentsWith(stack, AmassEnchantEffects.STATIONARY);
+        List<StatusEffectInstance> core = stack.getOrDefault(AmassDataComponents.STORED_EFFECTS, List.of());
+        List<StatusEffectInstance> effects = new ArrayList<>(core);
+
+        if (this.getMaxUseTime(stack, user) - remainingUseTicks >= 20) {
+            if (user instanceof PlayerEntity player) {
+                if (hasAccretion) {
+                    ThrownBandEntity entity = new ThrownBandEntity(AmassEntities.THROWN_BAND, world);
+                    entity.setPosition(user.getX(), user.getEyeY() - 0.10000000149011612, user.getZ());
+
+                    entity.setVelocity(user, user.getPitch(), user.getHeadYaw(), 0.0f, 2.5f, 0);
+                    entity.setPitch(user.getPitch());
+                    entity.setYaw(user.getHeadYaw());
+                    entity.setBandStack(stack);
+                    entity.setOwner(user);
+
+                    world.spawnEntity(entity);
+
+                    stack.decrement(1);
+                } else {
+                    effects.forEach(player::addStatusEffect);
+                    if (!player.isCreative()) {
+                        player.getItemCooldownManager().set(this, 260);
+                    }
+
+                    stack.set(AmassDataComponents.STORED_EFFECTS, List.of());
+                }
+            }
+        }
+
+        super.onStoppedUsing(stack, world, user, remainingUseTicks);
+    }
+
+    public UseAction getUseAction(ItemStack stack) {
+        return UseAction.BOW;
     }
 
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
@@ -91,13 +133,19 @@ public class GlimmeringBandItem extends Item implements ModelVaryingItem, Colora
     }
 
     public Identifier getModel(ModelTransformationMode modelTransformationMode, ItemStack itemStack, @Nullable LivingEntity livingEntity) {
+        if (livingEntity != null) {
+            if (livingEntity.isUsingItem()) {
+                return itemStack.getOrDefault(AmassDataComponents.STORED_EFFECTS, List.of()).isEmpty() ? Amass.id("glimmering_band") : Amass.id("glimmering_band_filled_charging");
+            }
+        }
         return itemStack.getOrDefault(AmassDataComponents.STORED_EFFECTS, List.of()).isEmpty() ? Amass.id("glimmering_band") : Amass.id("glimmering_band_filled");
     }
 
     public List<Identifier> getModelsToLoad() {
         return Arrays.asList(
                 Amass.id("glimmering_band"),
-                Amass.id("glimmering_band_filled")
+                Amass.id("glimmering_band_filled"),
+                Amass.id("glimmering_band_filled_charging")
         );
     }
 }

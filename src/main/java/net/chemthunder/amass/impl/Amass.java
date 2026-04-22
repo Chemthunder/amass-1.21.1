@@ -2,6 +2,7 @@ package net.chemthunder.amass.impl;
 
 import net.chemthunder.amass.impl.index.AmassDataComponents;
 import net.chemthunder.amass.impl.index.AmassEnchantEffects;
+import net.chemthunder.amass.impl.index.AmassEntities;
 import net.chemthunder.amass.impl.index.AmassItems;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
@@ -16,6 +17,7 @@ public class Amass implements ModInitializer {
         AmassItems.init();
         AmassDataComponents.init();
         AmassEnchantEffects.init();
+        AmassEntities.init();
 
 		LOGGER.info("Stockpiling...");
 	}
